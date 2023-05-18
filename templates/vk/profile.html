@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+    <div class="col-md-9">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-4">Редагування</h5>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label font-weight-bold">Ім'я:</label>
+          <div class="col-sm-9">
+            {{ form.name }}
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label font-weight-bold">Фото профілю:</label>
+          <div class="col-sm-9">
+            {{ form.image }}
+          </div>
+        </div>
+        <div class="form-group row mt-5">
+          <div class="col-sm-9 offset-sm-3">
+            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2">Зберегти зміни</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<style>
+.col-md-9{
+    margin-left: 250px;
+    margin-top: -200px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+</style>
+{% endblock %}

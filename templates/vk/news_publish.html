@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+
+<div class="container">
+<h1 class="news-heading">Додати новину</h1>
+  <form method="post" enctype="multipart/form-data" class="news-form">
+    {% csrf_token %}
+    <div class="form-group">
+
+      <label for="text">Текст новини:</label>
+      <textarea id="text" name="text" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="image">Зображення:</label>
+      <input type="file" id="image" name="image" class="form-control-file">
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">Опублікувати</button>
+  </form>
+</div>
+
+
+<style>
+  .news-heading {
+    font-size: 2rem;
+    margin-top: -200px;
+    text-align: center;
+  }
+
+  .news-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+  }
+
+  .form-group {
+
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .btn-primary {
+    background-color: #4568dc;
+    border-color: #4568dc;
+  }
+
+  .btn-primary:hover {
+    background-color: #2b43b5;
+    border-color: #2b43b5;
+  }
+  </style>
+{% endblock %}

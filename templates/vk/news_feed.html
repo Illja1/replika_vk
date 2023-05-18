@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+  <h1 class="news-heading">Новини</h1>
+  {% for news in news_list %}
+  <div class="news-card">
+    {% if news.image %}
+      <img src="{{ news.image.url }}" alt="News image" class="news-image">
+    {% endif %}
+    <p class="news-text">{{ news.text }}</p>
+    <p class="news-user">Опублікував: {{ news.user.user.name }}, {{ news.created_at|date:"d.m.Y H:i" }}</p>
+    <form method="post" action="{% url 'like_news' news_id=news.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="news_id" value="{{ news.pk }}">
+      <button type="submit" class="news-like-btn">
+        <i class="fas fa-heart"></i> Like (<span class="news-like-count">{{ news.likes.count }}</span>)
+      </button>
+    </form>
+  </div>
+{% empty %}
+  <p class="no-news-text">Новин немає</p>
+{% endfor %}
+
+
+    <style>
+/* News feed page */
+.news-heading {
+  font-size: 2rem;
+  margin-top: -200px;
+  text-align: center;
+}
+
+.news-card {
+  background-color: #f8f8f8;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+  margin: 2rem auto;
+  max-width: 500px;
+  padding: 1rem;
+}
+
+.news-image {
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  max-width: 100%;
+}
+
+.news-text {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.news-like-form {
+  display: inline-block;
+}
+
+.news-like-btn {
+  background-color: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  padding: 0;
+}
+
+.news-like-btn:hover {
+  color: #ff3f3f;
+}
+
+.no-news-text {
+  font-size: 1.5rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+
+
+    </style>
+
+
+{% endblock %}

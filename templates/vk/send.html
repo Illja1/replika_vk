@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% block title %}Чат з {{ recipient }}{% endblock %}
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+
+<div class="sub-container">
+  <div class="chat-body" id="chat-body">
+    {% for chat in chats %}
+      {% if chat.msg_sender == sender and chat.msg_reciver == recipient %}
+        <div class='chat-message chat-message-sent'>
+          <div class='chat-message-content'>
+            {{ chat }}
+          </div>
+          {% if chat.msg_sender == profile %}
+            <div class='chat-message-actions'>
+              <button id="edit-{{chat.id}}"><a href="{% url 'edit_message' message_id=chat.id%}">Ред</a></button>
+              <button id="delete-{{chat.id}}"><a href="{% url 'delete_message' message_id=chat.id %}">Видалити</a></button>
+            </div>
+          {% endif %}
+        </div>
+      {% elif chat.msg_sender == recipient and chat.msg_reciver == sender %}
+        <div class='chat-message chat-message-received'>
+          <div class='chat-message-content'>
+            {{ chat }}
+          </div>
+          {% if chat.msg_sender == profile %}
+            <div class='chat-message-actions'>
+              <button id="edit-{{chat.id}}"><a href="{% url 'edit_message' %}">Ред</a></button>
+              <button id="delete-{{chat.id}}"><a href="{% url 'delete_message'%}">Видалити</a></button>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class='chat-message chat-box-sent' id='chat-box-sent' style='display: none'></div>
+  </div>
+
+  <form action="" id="myform" method="POST" class="chat-form">
+    {% csrf_token %}
+    {{form.body}}
+    <button type="submit" id="submit" class="chat-form-submit">Відправити</button>
+  </form>
+</div>
+
+
+
+
+
+{#Це код JavaScript, який виконує наступні функції:#}
+{##}
+{#1. Визначає функцію з назвою `getCookie()`, яка отримує файл cookie з певною назвою зі сховища файлів cookie браузера.Вона приймає ім'я файлу cookie як аргумент і повертає значення файлу cookie.#}
+{##}
+{#2. Отримує значення токену CSRF зі сховища файлів cookie браузера за допомогою функції `getCookie()` і присвоює його константі з іменем `csrftoken`.#}
+{##}
+{#3. Вибирає елемент HTML-форми з ідентифікатором `myform` і приєднує до нього слухач подій, який чекає на подію відправлення і викликає функцію `endChat()`, коли форма буде відправлена.#}
+{##}
+{#4. Визначає функцію з ім'ям `sendChat()`, яка запобігає відправленню форми, отримує повідомлення чату користувача з HTML-елемента з ідентифікатором `id_body`, створює JSON-об'єкт, що містить повідомлення чату, і надсилає POST-запит на сервер з даними повідомлення чату і токеном CSRF в заголовках запиту. Якщо запит виконано успішно, він додає отримане повідомлення чату до елемента тіла чату на сторінці.#}
+{##}
+{#5. Визначає функцію з ім'ям `receiveMessages()`, яка надсилає GET-запит на сервер за певною URL-адресою кожні 2 секунди за допомогою функції `setInterval()`. Відповіддю від сервера є JSON-об'єкт, що містить останні повідомлення чату для конкретного одержувача. Якщо кількість повідомлень чату збільшилася з моменту останнього запиту, функція додає нове повідомлення в елемент тіла чату на сторінці. #}
+{##}
+{#6. Ініціалізує змінну з іменем `counter` зі значенням `num`, яка є шаблонною змінною, наданою сервером. Змінна `counter` використовується для відстеження кількості повідомлень чату на сторінці і використовується для визначення наявності нових повідомлень чату при виклику функції `receiveMessages()`.#}
+
+<script>
+
+  function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+{#Цей код налаштовує приймач для відправки форми і відправляє повідомлення в чат через AJAX. Ось що робить кожен рядок коду:#}
+{##}
+{#let form = document.getElementById("myform") - отримує елемент HTML-форми з ідентифікатором "myform" і зберігає його у змінній з іменем form.#}
+{##}
+{#form.addEventListener("submit", sendChat) - Приєднати до змінної form слухач подій, який прослуховує відправлення форми і запускає функцію sendChat.#}
+{##}
+{#function sendChat(e) { - Визначити функцію sendChat, яка отримує об'єкт події як аргумент.#}
+{##}
+{#e.preventDefault() - Заборонити поведінку надсилання форми за замовчуванням.#}
+{##}
+{#let chatMessage = document.getElementById("id_body").value - Отримати значення елемента вводу id_body та зберегти його у змінній з назвою chatMessage.#}
+{##}
+{#console.log(chatMessage) - вивести значення chatMessage в консоль для налагодження.#}
+{##}
+{#const data = { msg: chatMessage }; - Створити об'єкт з іменем data з єдиною парою ключ-значення, де ключем є "msg", а значенням - chatMessage.#}
+{##}
+{#let url = "{% url 'send_msg' recipient.id %}" - Встановіть змінну url в якості URL-адреси кінцевої точки на стороні сервера, куди буде надіслано повідомлення чату. Змінна recipient.id - це змінна шаблону Django, яка буде замінена на ідентифікатор отримувача повідомлення.#}
+{##}
+{#fetch(url, {...}) - Зробити AJAX-запит до кінцевої точки url за допомогою API fetch.#}
+{##}
+{#method: 'POST' - Вкажіть, що AJAX-запит повинен використовувати метод HTTP POST.#}
+{##}
+{#headers: {...} - Встановіть, щоб заголовки запиту включали заголовок Content-Type зі значенням "application/json" і заголовок X-CSRFToken зі значенням змінної csrftoken.#}
+{##}
+{#body: JSON.stringify(data) - Встановити тіло запиту як об'єкт даних у форматі JSON.#}
+{##}
+{#.then(response => response.json()) - Конвертувати відповідь від сервера у формат JSON.#}
+{##}
+{#.then(data => {...}) - Обробити дані відповіді у форматі JSON, повернуті сервером.#}
+{##}
+{#let chat_body = document.getElementById('chat-body') - Отримати HTML-елемент з ідентифікатором "chat-body" і зберегти його у змінній з іменем chat_body.#}
+{##}
+{#let chatMessageBox = document.createElement("div") - Створити новий HTML-елемент div і зберегти його у змінній з назвою chatMessageBox.#}
+{##}
+{#chatMessageBox.classList.add("chat-box-sent") - Додати CSS клас "chat-box-sent" до елемента chatMessageBox.#}
+{##}
+{#chatMessageBox.internalText = data - Встановити текстовий вміст елемента chatMessageBox на дані, отримані від сервера.#}
+{##}
+{#chat_body.append(chatMessageBox) - Додати елемент chatMessageBox до елемента chat_body.#}
+{##}
+{#document.getElementById("id_body").value="" - Очистити значення елемента вводу id_body.#}
+{##}
+{#.catch((error) => {...}) - Обробляє всі помилки, що виникають під час виконання AJAX-запиту, і виводить їх в консоль.#}
+
+
+    let form = document.getElementById("myform")
+
+    form.addEventListener("submit", sendChat)
+
+    function sendChat(e) {
+        e.preventDefault()
+        let chatMessage = document.getElementById("id_body").value
+        console.log(chatMessage)
+
+        const data = { msg: chatMessage };
+
+        let url = "{% url 'send_msg' recipient.id %}"
+
+
+
+fetch(url, {
+  method: 'POST', // or 'PUT'
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': csrftoken
+  },
+  body: JSON.stringify(data),
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+  let chat_body = document.getElementById('chat-body')
+  let chatMessageBox = document.createElement("div")
+  chatMessageBox.classList.add("chat-box-sent")
+  chatMessageBox.innerText = data
+  chat_body.append(chatMessageBox)
+  document.getElementById("id_body").value=""
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
+
+
+    }
+    let counter = {{ num }}
+{#для оновлення сторінки кожних 6 секунд#}
+setInterval(function(){
+    location.reload();
+}, 6000);
+
+{#Це функція JavaScript з назвою `receiveMessages`, яка отримує дані з вказаної URL-адреси за допомогою методу `fetch()`, потім обробляє повернуті дані за допомогою серії операторів `if` і, нарешті, оновлює значення змінної-лічильника.#}
+{##}
+{#Ось більш детальна розбивка коду:#}
+{##}
+{#1. Перший рядок функції оголошує змінну `url` і присвоює їй значення, яке є тегом шаблону Django URL, який використовується для генерації URL, що направляється на кінцеву точку `rec_msg` і передає в якості параметра ідентифікатор одержувача.#}
+{##}
+{#2. Метод `fetch()` використовується для відправки GET-запиту на згенерований URL. Після завершення запиту отримана відповідь передається на наступний крок за допомогою обіцянки.#}
+{##}
+{#3. Метод `then()` викликається на об'єкті відповіді і розбирає дані відповіді у формат JSON.#}
+{##}
+{#4. Викликається ще один метод `then()`, який отримує розбір даних і виконує функцію зворотного виклику, яка виводить на консоль повідомлення про успішне завершення.#}
+{##}
+{#5. Потім функція зворотного виклику перевіряє, чи повернуті дані не є порожнім масивом. Якщо масив порожній, то нічого не відбувається. В іншому випадку функція створює новий HTML-елемент методом `document.createElement()`, додає до нього деякі класи методом `classList.add()`, встановлює внутрішній текст елемента за допомогою властивості `innerText`, додає елемент до HTML-документа методом `appendChild()` і, нарешті, очищає значення поля введення.#}
+{##}
+{#6. Потім функція оновлює значення змінної `counter` на довжину повернених даних.#}
+{##}
+{#7. Якщо під час запиту на вибірку або обробки даних виникає помилка, викликається метод `catch()`, який виводить повідомлення про помилку на консоль.#}
+{##}
+{#Загалом, ця функція використовується для отримання повідомлень чату та оновлення вікна чату в реальному часі. Ймовірно, вона є частиною більшого JavaScript-скрипту, який обробляє користувацький інтерфейс програми чату.#}
+
+
+
+function receiveMessages() {
+let url = '{% url 'rec_msg' recipient.id%}'
+        fetch(url)
+            .then(responce => responce.json())
+            .then(data =>{
+                console.log("success:",data);
+
+            if(data.length == 0){}
+            else{
+                let lastMsg = data[data.length-1]
+                if(counter == data.length){
+                    console.log('no new chat')
+                }
+                else{
+                    let chat_body = document.getElementById('chat-body')
+                    let chatMessageBox = document.createElement('div')
+
+                    chatMessageBox.classList.add('chat-box-received')
+                    chatMessageBox.innerText = lastMsg
+                    chat_body.append(chatMessageBox)
+                    document.getElementById('id_body').value=''
+                    console.log()
+                    console.log
+                }
+            }
+            counter = data.length
+            })
+            .catch((error) =>{
+                console.error('Error:',error);
+            });
+}
+
+
+
+
+
+</script>
+
+<style>
+.sub-container {
+  background-color: #fff;
+  border: 1px solid #d3d8de;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.chat-body {
+  background-color: #f5f5f5;
+  border-top: 1px solid #d3d8de;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.chat-message {
+  display: flex;
+  margin-bottom: 10px;
+  max-width: 60%;
+}
+
+.chat-message-sent {
+  justify-content: flex-end;
+}
+
+.chat-message-received {
+  justify-content: flex-start;
+}
+
+.chat-message-content {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 8px 12px;
+  word-wrap: break-word;
+}
+
+.chat-message-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 8px;
+}
+
+.chat-form {
+  display: flex;
+  margin-top: auto;
+  padding: 12px;
+}
+
+.chat-form-submit {
+    background-color: #5181b8;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+}
+    </style>
+{% endblock %}

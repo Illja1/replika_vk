@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'inc/_sidebar.html' %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="box-upload">
+    <div class="upload-icon">
+      <i class="fa-solid fa-cloud-upload" style="color: #2787f5;"></i>
+    </div>
+    <div class="upload-text">
+      <p>Завантажити зображення<input type="file" name="image" id="id_image"></p>
+      <span>До 10 файлів, JPG, PNG до 50 Мб</span>
+    </div>
+    <div class="upload-btn">
+      <input type="file" name="image" id="id_image" multiple>
+      <button type="submit">Відправити</button>
+    </div>
+  </div>
+</form>
+
+<style>
+  .box-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #2787f5;
+    padding: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .upload-icon {
+    margin-right: 20px;
+    font-size: 50px;
+  }
+  .upload-text {
+    margin-right: 20px;
+    text-align: center;
+    color: #999999;
+  }
+  .upload-btn input[type="file"] {
+    display: none;
+  }
+  .upload-btn button {
+    background-color: #2787f5;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  .upload-btn button:hover {
+    background-color: #1e63b9;
+  }
+</style>
+
+{% endblock %}
+
+
+
+

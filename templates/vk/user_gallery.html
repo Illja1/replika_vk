@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+    <!-- Gallery Title -->
+<h1 class="t">Галерея</h1>
+
+<!-- Gallery Images -->
+<div class="row">
+  {% if images %}
+    {% for image in images %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ image.title }}</h5>
+            <p class="card-text">{{ image.description }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Зображень немає</p>
+</div>
+
+<!-- Form for Uploading Images -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                  {{ field }}: {{ error }}
+                {% endfor %}
+              {% endfor %}
+            </div>
+          {% endif %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Завантажити</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<style>
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+
+.card-img-top {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 5px 5px 0 0;
+}
+
+.btn {
+  background-color: #5181b8;
+  border-color: #5181b8;
+  color: #fff;
+}
+
+.btn:hover {
+  background-color: #3f6ea6;
+  border-color: #3f6ea6;
+  color: #fff;
+}
+
+.t{
+    margin-top: -200px;
+    margin-left: 200px;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.row {
+  margin-left: 200px;
+}
+
+.col-md-4 {
+  width: 33.33%;
+  padding: 0 15px;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+</style>
+
+{% endblock %}

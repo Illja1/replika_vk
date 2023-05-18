@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile-form-container">
+  <form method="post" enctype="multipart/form-data" class="profile-form">
+    {% csrf_token %}
+    <div class="profile-form-group">
+      <label for="{{ form.name.id_for_label }}">Ім'я</label>
+      {{ form.name }}
+    </div>
+    <div class="profile-form-group">
+      <label for="{{ form.age.id_for_label }}">Вік</label>
+      {{ form.age }}
+    </div>
+    <div class="profile-form-group">
+      <label for="{{ form.telephone_number.id_for_label }}">Номер телефону</label>
+      {{ form.telephone_number }}
+    </div>
+    <div class="profile-form-group">
+      <label for="{{ form.image.id_for_label }}">Фото профілю</label>
+      {{ form.image }}
+    </div>
+    <button type="submit" class="profile-form-submit-button">Створити профіль</button>
+  </form>
+</div>
+<style>
+  .profile-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .profile-form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .profile-form-group label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #999;
+  }
+
+  .profile-form-group input,
+  .profile-form-group textarea,
+  .profile-form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  .profile-form-group input:focus,
+  .profile-form-group textarea:focus,
+  .profile-form-group select:focus {
+    border-color: #0077ff;
+  }
+
+  .profile-form-submit-button {
+    margin-top: 20px;
+    background-color: #0077ff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .profile-form-submit-button:hover {
+    background-color: #0055cc;
+  }
+
+  .profile-form-error-message {
+    color: #f00;
+    margin-bottom: 10px;
+  }
+</style>
+{% endblock %}

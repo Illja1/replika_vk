@@ -1,0 +1,230 @@
+/* Set the font family and background color of the entire page */
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  min-height: 100vh; /* set minimum height of the body equal to 100% viewport height */
+  display: flex; /* use flexbox to align items vertically */
+  flex-direction: column; /* align items from top to bottom */
+}
+
+/* Style the form container */
+.r-cont {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Style the form */
+.f-form form {
+  background-color: #ffffff;
+  padding: 40px; /* increased padding */
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the form fields */
+.f-form form input[type="text"], .f-form form input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 15px; /* increased padding */
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Style the form submit button */
+.f-form form button[type="submit"] {
+  background-color: #5181b8;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.f-form form button[type="submit"]:hover {
+  background-color: #4a76a8;
+}
+
+/* Style the footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 5px;
+  box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+footer a {
+  color: #5181b8;
+  text-decoration: none;
+  margin-right: 20px;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out;
+}
+
+footer a:hover {
+  color: #4a76a8;
+}
+
+footer .alish {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+footer .alish a {
+  color: #5181b8;
+  text-decoration: none;
+  margin-right: 10px;
+  transition: color 0.2s ease-in-out;
+}
+
+footer .alish a:hover {
+  color: #4a76a8;
+}
+
+footer .alish p {
+  margin-left: 10px;
+  color: #999999;
+}
+
+
+.sidebar {
+
+  margin-top: 50px;
+  height: 100%;
+  padding: 8px;
+  width: 150px;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+
+.sidebar li {
+  margin-bottom: 20px;
+
+}
+
+.sidebar a {
+  color: #2f2a2a;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.sidebar i {
+  margin-right: 10px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding-left: -1;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.nav-logo a {
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+    }
+
+.nav-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+.nav-links li {
+      margin-left: 30px;
+    }
+
+.nav-links a {
+      color: #333;
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+    }
+
+.nav-links a:hover {
+      color: #666;
+    }
+
+.nav-links {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+.profile-dropdown {
+      position: relative;
+    }
+
+.dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 1;
+      background-color: #f9f9f9;
+      padding: 8px 0;
+      border-radius: 4px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+.profile-dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+.nav-links img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+.dropdown-menu a {
+      display: block;
+      padding: 5px;
+      font-size: 0.8em;
+      color: #333;
+      text-decoration: none;
+    }
+
+.dropdown-menu a:hover {
+      background-color: #f2f2f2;
+    }
+
+
+

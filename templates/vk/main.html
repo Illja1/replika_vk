@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+{% include 'inc/_sidebar.html' %}
+
+<div class="box">
+{% if not profile.image %}
+    <img src="{% static 'default_img/images.png' %}" alt="Icon">
+    {% else %}
+  <img src="{{ user.user.image.url}}" alt="Icon">
+    {% endif %}
+  <div class="content">
+    <p>{{ user.user.name}}</p>
+  </div>
+  <div class="button">
+    <button><a href="{% url 'edit' %}">Редагувати сторінку</a></button>
+  </div>
+</div>
+    <div class="box-publish">
+  <button class="add-button"><a href="{% url 'pub' %}"></a></button>
+  <div class="text">Опублікуйте запис<p class="text-inside">Розкажіть,як минув день або де ви нещодавно побували</p></div>
+
+</div>
+
+<div class="image-gallery">
+  <div class="header">
+    <p class="icon-text"><i class="fas fa-image" style="color:#005eff"></i>Фото</p>
+  </div>
+  <div class="images">
+    {% for img in images|slice:":5"%}
+      {% if img.image %}
+        <div class="row">
+          <img src="{{ img.image.url }}" alt="{{ img.name }}" width="100" height="100">
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="buttons">
+    <button><a href="{%url 'upload'%}">Завантажити зображення</a></button>
+    <button><a href="{%url 'gallery'%}">Показати всі</a></button>
+  </div>
+
+
+
+<div class="friends-list">
+  <h2>Друзі</h2>
+  {% if friends %}
+    <ul>
+      {% for friend in friends %}
+          <li>
+          {% if friend.user.image %}
+            <img src="{{ friend.user.image.url }}" alt="{{ friend.name }}">
+               {% else %}
+           <img src="{% static 'default_img/images.png' %}" alt="{{ friend.user.name }}">
+        {% endif %}
+            <p>{{ friend.user.name }}</p>
+          </li>
+
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>У вас ще немає друзів.</p>
+  {% endif %}
+</div>
+</div>
+
+
+
+<style>
+.img-wrap{
+    display: flex;
+    margin-left: 200px;
+    justify-content: space-between;
+    align-items:center ;
+    max-width: 1200px;
+}
+  .box {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 20px;
+       position: fixed;
+    margin-left: 200px;
+    margin-top: -215px;
+    position: relative;
+    width: 1200px;
+    height: 200px;
+  }
+
+  .box img {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+
+  }
+
+  .content {
+    position: absolute;
+    bottom: 30px;
+    left: 140px;
+    margin-right: 50px;
+  }
+
+  .content p {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .button {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+  }
+
+  .button button {
+    background-color: #c5c7cb;
+    border: none;
+    color: #3263b8;;
+    padding: 10px;
+      margin-right: 50px;
+      margin-bottom: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+   .image-gallery {
+       max-width: 480px;
+       margin-left: 200px;
+       margin-top: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .header img {
+    width: 50px;
+    height: 50px;
+
+  }
+
+  .header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+      margin-left: 0px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: -10px;
+      margin-right: -10px;
+  }
+
+  .row img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  .buttons button {
+    background-color: #c5c7cb;
+    border: none;
+    color: #3263b8;;
+    padding: 10px;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .icon-text {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.icon-text i {
+  margin-right: 10px;
+}
+.box-publish {
+    float: right;
+  position: relative;
+    margin-top: 58px;
+    width: 483px;
+  top: 50%;
+  right: 314px;
+  transform: translateY(-50%);
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+
+.add-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.text {
+  margin: 0;
+}
+
+.add-button a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+
+.box-publish .text {
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.box-publish .text p {
+  margin: 5px 0 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+
+  .friends-list {
+      margin-left: 516px;
+      border: 1px solid #ccc;
+    width: 480px;
+      border-radius: 5px;
+  }
+  .friends-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  .friends-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .friends-list img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .friends-list p {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+  }
+
+.text {
+  font-size: 15px;
+  font-weight: bold;
+  margin-left: -20px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.text-inside{
+    font-size: 10px;
+    color: #666666;
+}
+
+.friends-box {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+    margin-left: 960px;
+    margin-top: 30px;
+  padding: 20px;
+  width: 440px;
+  position: relative;
+}
+
+.friends-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #2e416e;
+  color: #fff;
+  padding: 10px 20px;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.friends-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+
+.friends-row img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin: 10px;
+  border: 2px solid #2e416e;
+  border-radius: 50%;
+}
+
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+<div class="content">
+    <div class="page_block">
+        <div class="page_block_header">
+            <h1 class="page_block_header_text">Зареєстровані користувачі та друзі</h1>
+        </div>
+        <div class="page_block_body">
+            {% if users %}
+                <h2 class="users_title">Користувачі</h2>
+                <ul class="users_list">
+                    {% for user in users %}
+                        {% if user != request.user %}
+                        <li class="user_item">
+                            {% if user.user.image %}
+                                <img width="100px" height="100px" src="{{ user.user.image.url }}" alt="{{ user.userprofile.name }}">
+                            {% else %}
+                                <img src="{% static 'default_img/images.png' %}" alt="{{ user.name }}">
+                            {% endif %}
+                            <div class="user_info">
+                                <h2 class="user_name">{{ user.name }}</h2>
+                                <div class="user_contacts">
+                                    <span class="user_contact_icon"><i class="fa fa-phone"></i></span>
+                                    <span class="user_contact_value">{{ user.user.telephone_number }}</span>
+                                </div>
+                            </div>
+
+                            {% if user.is_friend %}
+                                <button type="submit" class="user_friendship_button user_friendship_button_remove"><a href="{% url 'change' operation='remove' pk=user.user.pk%}">Вилучити з друзів</a></button>
+                                <button type="submit" class="user_friendship_button user_friendship_button_remove"><a href="{% url 'message' recipient_id=user.user.pk %}">Написати повідомлення</a></button>
+                            {% else %}
+                                <button type="submit" class="user_friendship_button user_friendship_button_add"><a href="{% url 'change' operation='add' pk=user.user.pk%}">Додати до друзів</a></button>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no_users_message">Більше користувачів немає</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+    <style>
+/* Main page styles */
+.content {
+
+    max-width: 900px;
+    margin-top: -200px;
+    margin-left: 300px;
+}
+.user_info{
+    margin-right: 300px;
+}
+
+.user_friendship_button {
+  display: inline-block;
+  background-color: #5181B8;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user_friendship_button:hover {
+  background-color: #3F6B99;
+}
+
+
+.page_block {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.page_block_header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    padding: 15px 20px;
+}
+
+.page_block_header_text {
+    color: #4a76a8;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.page_block_body {
+    padding: 20px;
+}
+
+.users_title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 15px;
+}
+
+.users_list {
+    list-style: none;
+    margin: 0;
+    padding-top: 20px;
+}
+
+.user_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #ebebeb;
+
+    padding: 15px 0;
+}
+
+
+    </style>
+{% endblock %}

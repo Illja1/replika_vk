@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'inc/_sidebar.html' %}
+    <div class="container">
+<ul class="friend-list">
+  {% for friend in friends %}
+  <li>
+    {% if friend.user.image %}
+            <img src="{{ friend.user.image.url }}" alt="{{ friend.name }}'s profile picture">
+        {% else %}
+            <img src="{% static 'default_img/images.png' %}" alt="Default profile picture">
+        {% endif %}
+    <span class="friend-name">{{ friend.user.name }}</span>
+    <button class="message-btn">
+      <a href="{% url 'message' recipient_id=friend.user.pk %}">Повідомлення</a>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+    </div>
+<style>
+.container{
+    margin-left: 200px;
+    margin-top: -200px;
+}
+.friend-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.friend-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.friend-list li img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.friend-list li .friend-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.friend-list li .message-btn {
+  border: none;
+  background-color: #5181b8;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+    margin-left: 50px;
+  transition: background-color 0.2s ease;
+}
+
+.friend-list li .message-btn:hover {
+  background-color: #2c5282;
+}
+
+</style>
+{% endblock %}
